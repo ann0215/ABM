@@ -8,23 +8,23 @@ class Node:
         self.father = (0, 0)
 
 
-def add_barrier(barrier_set):
+def add_barrier(barrier_set):  #input barrier_set is a list of tuples where is the key corner of the barrier
     # add boundray (borader)
     barrier_list = []
     (left_bottom0, left_bottom1) = barrier_set[0]
     (right_top0, right_top1) = barrier_set[1]
     door = barrier_set[2]   # change the door to barrier
-    for i in range(left_bottom0, right_top0):
-        barrier_list.append((i, left_bottom1))
-        barrier_list.append((i, right_top1-1))
-    for j in range(left_bottom1+1, right_top1-1):
-        barrier_list.append((left_bottom0, j))
-        barrier_list.append((right_top0-1, j))
+    for i in range(left_bottom0, right_top0):  #(0 to 26) 
+        barrier_list.append((i, left_bottom1))  #(0, 0) (1, 0) (2, 0) ... (26, 0)
+        barrier_list.append((i, right_top1-1))  #(0, 16) (1, 16) (2, 16) ... (26, 16)
+    for j in range(left_bottom1+1, right_top1-1):  #(1 to 15)
+        barrier_list.append((left_bottom0, j))  #(0, 1) (0, 2) (0, 3) ... (0, 15)
+        barrier_list.append((right_top0-1, j))   #(26, 1) (26, 2) (26, 3) ... (26, 15)
     barrier_list.remove(door)
     
-    # add obstacles
+    # add obstacles  (对中间障碍物的改动在这里进行)
     t=3
-    while t<len(barrier_set):
+    while t<len(barrier_set):  #前三个都安排好了，从barrier set的第四个开始 set the obstacles 
         (left_bottom0, left_bottom1) = barrier_set[t]
         (right_top0, right_top1) = barrier_set[t+1]
         for i in range(left_bottom0, right_top0):
@@ -46,6 +46,7 @@ class AStar:
         
         # add barrier
         barrier_list = add_barrier(barrier_set)
+
 
         if start_loc in barrier_list:
             return
