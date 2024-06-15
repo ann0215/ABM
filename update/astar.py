@@ -7,12 +7,13 @@ class Node:
         self.f = 0
         self.father = (0, 0)
 
+
 def add_barrier(barrier_set):
     # add boundray (borader)
     barrier_list = []
     (left_bottom0, left_bottom1) = barrier_set[0]
     (right_top0, right_top1) = barrier_set[1]
-    door = barrier_set[2]
+    door = barrier_set[2]   # change the door to barrier
     for i in range(left_bottom0, right_top0):
         barrier_list.append((i, left_bottom1))
         barrier_list.append((i, right_top1-1))
