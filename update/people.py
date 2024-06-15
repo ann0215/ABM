@@ -32,6 +32,10 @@ class PeopleList:
             count = count + 1
             self.list.append(People("o"+str(count), 140, 60 + i * 40))
             count = count + 1
+            self.list.append(People("o"+str(count), 180, 60 + i * 40))
+            count = count + 1
+            self.list.append(People("o"+str(count), 220, 60 + i * 40))
+            count = count + 1
     
     def assign_groups(self, group_split, max_distance=150):
         """Assigns pedestrians to groups with members within a specified distance."""

@@ -12,7 +12,7 @@ def self_driven_force(matrix, ped, tau=0.5):
     fi = (ped.m * (desired_v[0] - ped.v[0]) / tau, ped.m * (desired_v[1] - ped.v[1]) / tau)
     return fi
 
-def ped_repulsive_force(ped_list,i, A=2000, B=-0.08, threshold=1.4):
+def ped_repulsive_force(ped_list,i, A=998.97, B=-0.08, threshold=0.8, k=819.62,kappa=510490):
     """ped_list: PeopleList.list"""
     sum_of_fij = (0,0)
     ped = ped_list[i]
@@ -20,14 +20,24 @@ def ped_repulsive_force(ped_list,i, A=2000, B=-0.08, threshold=1.4):
         if i==j:
             continue
         temp = ped_list[j]
-        d = (((ped_list[i].loc[0] - temp.loc[0])/100)**2 + ((ped_list[i].loc[1] - temp.loc[1])/100)**2)**0.5
-        if d<threshold: #Only works when two peds are closer than 1.4m
-            fij =A * math.exp((d-ped_list[i].r/100-temp.r/100)/B)
-            sum_of_fij = (sum_of_fij[0] + fij * (ped.loc[0] - temp.loc[0])/100,
-                          sum_of_fij[1] + fij * (ped.loc[1] - temp.loc[1])/100)
+        d = (((ped.loc[0] - temp.loc[0])/100)**2 + ((ped.loc[1] - temp.loc[1])/100)**2)**0.5
+        if d<threshold: #Only works when two peds are closer than threshold
+            # fij =A * math.exp((d-ped_list[i].r/100-temp.r/100)/B) 
+            # sum_of_fij = (sum_of_fij[0] + fij * (ped.loc[0] - temp.loc[0])/100,
+            #               sum_of_fij[1] + fij * (ped.loc[1] - temp.loc[1])/100)
+            n0 = (ped.loc[0] - temp.loc[0])/100 # vector point from j to i
+            n1 = (ped.loc[1] - temp.loc[1])/100
+            r_d = ped.r/100+temp.r/100-d
+            g=max(0, r_d)
+            fij_1 =A * math.exp((-r_d)/B) + k * g
+            v_diff_tang = (temp.v[0]-ped.v[0])*(-n1) + (temp.v[1]-ped.v[1])*(n0) 
+            fij_2 = kappa * g * v_diff_tang
+            sum_of_fij = (sum_of_fij[0] + fij_1 * n0 - fij_2*n1,
+                          sum_of_fij[1] + fij_1 * n1 + fij_2*n0)
+            
     return sum_of_fij
 
-def ped_obstacle_rep_force(ped, barrier_list, threshold=120, A=2000, B=-0.08, scale=40):
+def ped_obstacle_rep_force(ped, barrier_list, threshold=120, A=998.97, B=-0.08, scale=40):
     """ped is a object: PeopleList.list[i]
        threshold (cm)"""
     sum_of_fiw = (0,0)
