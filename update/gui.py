@@ -15,6 +15,17 @@ class GUI:
         self.c.pack()
         self.label = Label(self.top, text="Time = 0.0 s")
         self.label.pack()
+        
+        self.draw_grid()
+        
+    def draw_grid(self, grid_size=40):
+        """Draw grid on the canvas"""
+        for x in range(0, 1080, grid_size):
+            self.c.create_line(x, 0, x, 680, fill="#D3D3D3")
+        for y in range(0, 680, grid_size):
+            self.c.create_line(0, y, 1080, y, fill="#D3D3D3")
+       
+
 
     def add_barrier(self,barrier_set,scale=40):
         # Room boundray
@@ -59,4 +70,11 @@ class GUI:
     '''Sart GUI'''
     def start(self):
         self.top.mainloop()
+
+
+
+
+
+
+
 
