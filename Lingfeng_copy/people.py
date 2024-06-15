@@ -32,31 +32,42 @@ class PeopleList:
             count = count + 1
             self.list.append(People("o"+str(count), 140, 60 + i * 40))
             count = count + 1
-
-    def assign_groups(self, group_split):
-        """group_split={4:1, 3:2, 2: 5}"""
-        
-        random.seed(41) 
+    
+    def assign_groups(self, group_split, max_distance=150):
+        """Assigns pedestrians to groups with members within a specified distance."""
+        random.seed(41)
         ped_num_list = list(range(len(self.list)))
         random.shuffle(ped_num_list)
-    
+
         group_id = 1
         for size, count in group_split.items():
             for _ in range(count):
                 if len(ped_num_list) >= size:
-                    selected_indices = [ped_num_list.pop(0) for _ in range(size)]
+                    selected_indices = [ped_num_list.pop(0)]
+                    for _ in range(1, size):
+                        for index in ped_num_list:
+                            if self._within_distance(self.list[selected_indices[0]], self.list[index], max_distance):
+                                selected_indices.append(index)
+                                ped_num_list.remove(index)
+                                break
+
                     for index in selected_indices:
                         self.list[index].group_id = group_id
                         self.list[index].group_size = size
-                
+
                     group_id += 1
                 else:
                     break
+
         for index in ped_num_list:
             self.list[index].group_id = group_id
             self.list[index].group_size = 1
             group_id += 1
-        
+
+    def _within_distance(self, person1, person2, max_distance):
+        """Checks if person2 is within max_distance of person1."""
+        distance = math.sqrt((person1.loc[0] - person2.loc[0]) ** 2 + (person1.loc[1] - person2.loc[1]) ** 2)
+        return distance <= max_distance
 
     def direction_matrix(self,barrier_list, k=5):
         """matrix saving next directions
