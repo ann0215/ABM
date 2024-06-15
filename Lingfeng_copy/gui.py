@@ -1,5 +1,5 @@
 """Gui Plot"""
-
+import re
 import tkinter as tk
 from tkinter import Label
 
@@ -16,7 +16,7 @@ class GUI:
         self.label = Label(self.top, text="Time = 0.0 s")
         self.label.pack()
         
-        self.draw_grid()
+        self.draw_grid()  # Draw grid on the canvas 
         
     def draw_grid(self, grid_size=40):
         """Draw grid on the canvas"""
@@ -48,8 +48,22 @@ class GUI:
     def update_time(self, _time):
         self.label['text'] = "Time = "+_time + " s"
     """Oval(ped) Plotting"""
+    
     def add_oval(self, x1, y1, x2, y2, oval_tag):
-        self.c.create_oval(x1, y1, x2, y2, fill="#FFE4B5", tag=oval_tag) 
+
+        num_part = int(re.findall(r'\d+', oval_tag)[0])  # 提取数字并转换为整数  
+        # 假设 ID 数字部分为 5 或更小，椭圆颜色设为蓝色（#0000FF），否则使用默认肤色 (#FFE4B5)
+        if num_part <= 5:
+            fill_color = '#0000FF'  # 蓝色的十六进制代码
+        else:
+            fill_color = '#FFE4B5'  # 默认肤色
+
+        # 创建椭圆，颜色根据提取的数字决定
+        self.c.create_oval(x1, y1, x2, y2, fill=fill_color, tag=oval_tag)
+        
+        #self.c.create_oval(x1, y1, x2, y2, fill='#0000FF', tag=oval_tag)
+        
+
     """Group Connection Plotting"""
     def add_line(self,ped, Peoplelist, line_tag):
         if ped.group_size>1:
