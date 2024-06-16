@@ -52,8 +52,8 @@ class GUI:
     def add_oval(self, x1, y1, x2, y2, oval_tag):
 
         num_part = int(re.findall(r'\d+', oval_tag)[0])  # 提取数字并转换为整数  
-        # 假设 ID 数字部分为 5 或更小，椭圆颜色设为蓝色（#0000FF），否则使用默认肤色 (#FFE4B5)
-        if num_part <= 5:
+        # 假设 人是第一列的，椭圆颜色设为蓝色（#0000FF），否则使用默认肤色 (#FFE4B5)
+        if num_part % 3 == 0:
             fill_color = '#0000FF'  # 蓝色的十六进制代码
         else:
             fill_color = '#FFE4B5'  # 默认肤色
