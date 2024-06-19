@@ -4,12 +4,19 @@ from gui import GUI
 from people import PeopleList, People
 
 def group_num_calculator(N, r1, r2, r3):
-    """Calculation of the number of groups according to the corresponding ratio """
+    """Calculation of the number of groups according to the corresponding ratio (pederstains ratio) """
     """N: Total population; r_i: ratio of i-peds group"""
     """return: the number of each group"""
-    group1 = round(N * r1)
-    group2 = round(N * r2) * 2
-    group3 = round(N * r3) * 3
+    group2 = int(N * r2) 
+    group3 = int(N * r3)
+    
+    num2 = int(group2 / 2)
+    num3 = int(group3 / 3)
+    num1 = N - num2*2 - num3*3
+    
+    assert num1 + num2*2 + num3*3 == N, "Total number of people does not match N"
+    
+    return num1, num2, num3
 
     total = group1 + group2 + group3
     diff = N - total
