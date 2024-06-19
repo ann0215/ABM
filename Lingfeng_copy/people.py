@@ -11,7 +11,7 @@ class People:
         self.id = _id  # ped id
         self.m = 50 + random.randint(0, 20)  # ped weight/kg
         self.r = (35 + random.randint(0, 5))/2  # ped radius(shoulder length/2)/!!cm!!
-        self.d_v = (60 + random.randint(0, 20)) / 100  # expected vel (/m/s)
+        self.d_v = (70 + random.randint(0, 20)) / 100  # expected vel (/m/s)
         self.loc = (_loc_x, _loc_y)  # current position
         self.v = (0, 0)  # current vel
         self.a = (0, 0)  # current acceleration
@@ -31,6 +31,12 @@ class PeopleList:
             self.list.append(People("o"+str(count), 100, 60 + i * 40))
             count = count + 1
             self.list.append(People("o"+str(count), 140, 60 + i * 40))
+            count = count + 1
+            self.list.append(People("o"+str(count), 180, 60 + i * 40))
+            count = count + 1
+            self.list.append(People("o"+str(count), 220, 60 + i * 40))
+            count = count + 1
+            self.list.append(People("o"+str(count), 260, 60 + i * 40))
             count = count + 1
     
     def assign_groups(self, group_split, max_distance=150):
