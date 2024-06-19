@@ -12,7 +12,7 @@ def self_driven_force(matrix, ped, tau=0.5):
     fi = (ped.m * (desired_v[0] - ped.v[0]) / tau, ped.m * (desired_v[1] - ped.v[1]) / tau)
     return fi
 
-def ped_repulsive_force(ped_list,i, A=998.97, B=-0.08, threshold=0.8, k=819.62,kappa=510490):
+def ped_repulsive_force(ped_list,i, A=998.97, B=-0.08, threshold=0.5, k=819.62,kappa=510490):
     """ped_list: PeopleList.list"""
     sum_of_fij = (0,0)
     ped = ped_list[i]
@@ -70,22 +70,33 @@ def ped_obstacle_rep_force(ped, barrier_list, threshold=120, A=998.97, B=-0.08, 
         if (d < threshold) and (d > 0) and (ped.loc[1] > left_bottom1*scale) and (ped.loc[1] < right_top1*scale):
             fiw = A * math.exp((d - ped.r) / 100 / B)
             sum_of_fiw = (fiw * (-d) / 100 + sum_of_fiw[0], sum_of_fiw[1])
+            t+=2
+            continue
+            
         d = ped.loc[0] - right_top0*scale
         if (d < threshold) and (d > 0) and (ped.loc[1] > left_bottom1*scale) and (ped.loc[1] < right_top1*scale):
             fiw = A * math.exp((d - ped.r) / 100 / B)
             sum_of_fiw = (fiw * d / 100 + sum_of_fiw[0], sum_of_fiw[1])
+            t+=2
+            continue
+            
         d = left_bottom1*scale - ped.loc[1]
         if (d < threshold) and (d > 0) and (ped.loc[0] > left_bottom0*scale) and (ped.loc[0] < right_top0*scale):
             fiw = A * math.exp((d - ped.r) / 100 / B)
-            sum_of_fiw = (sum_of_fiw[0], fiw * (-1) * d / 100 + sum_of_fiw[1])   
+            sum_of_fiw = (sum_of_fiw[0], fiw * (-1) * d / 100 + sum_of_fiw[1])
+            t+=2
+            continue   
+            
         d = ped.loc[1] - right_top1*scale     
         if (d < threshold) and (d > 0) and (ped.loc[0] > left_bottom0*scale) and (ped.loc[0] < right_top0*scale):
             fiw = A * math.exp((d - ped.r) / 100 / B)
             sum_of_fiw = (sum_of_fiw[0], fiw * d / 100 + sum_of_fiw[1])
+            t+=2
+            continue
         t+=2
     return sum_of_fiw
 
-def group_vis_force(ped, Peoplelist, matrix,beta1=-4):
+def group_vis_force(ped, Peoplelist, matrix,beta1=4):
     """ped is a People object; Vision of Scene force"""
         
     f_vis = (0,0)
@@ -113,11 +124,11 @@ def group_vis_force(ped, Peoplelist, matrix,beta1=-4):
             cos_alpha = np.abs(np.dot(norm_d, next_desired) / (np.linalg.norm(norm_d)*np.linalg.norm(next_desired)))
             alpha = np.arccos(cos_alpha)
             alpha = np.degrees(alpha)
-            f_vis = (-beta1*alpha*ped.v[0], -beta1*alpha*ped.v[1])
+            f_vis = (-beta1*alpha*ped.v[0]*ped.m, -beta1*alpha*ped.v[1]*ped.m)
     return f_vis
    
  
-def group_att_force(ped, Peoplelist, q_A, beta2=2, threshold=2):
+def group_att_force(ped, Peoplelist, q_A=1, beta2=2, threshold=2):
     """ped is a People object; only works when ped is too far from the centroid"""
         
     f_att=(0,0)
@@ -136,7 +147,7 @@ def group_att_force(ped, Peoplelist, q_A, beta2=2, threshold=2):
             distance = np.linalg.norm(np.array(d))
             if distance/100>threshold:
                 d = (d[0]/distance, d[1]/distance)
-                f_att = (q_A * beta2 * d[0], q_A * beta2 * d[1])
+                f_att = (q_A * beta2 * d[0]*ped.m, q_A * beta2 * d[1]*ped.m)
     return f_att
         
             
@@ -156,7 +167,7 @@ def group_rep_force(ped, Peoplelist, q_R, beta3=2, threshold=1.4):
                     w_ik = (w_ik[0]/np.linalg.norm(w), w_ik[1]/np.linalg.norm(w))
                     f_rep0 += q_R * beta3 * w_ik[0]
                     f_rep1 += q_R * beta3 * w_ik[1]
-    f_rep = (f_rep0,f_rep1)
+    f_rep = (f_rep0 * ped.m,f_rep1 * ped.m)
     
     return f_rep
     
