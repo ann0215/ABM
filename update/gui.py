@@ -50,6 +50,9 @@ class GUI:
     """Oval(ped) Plotting"""
     def add_oval(self, x1, y1, x2, y2, oval_tag):
         self.c.create_oval(x1, y1, x2, y2, fill="#FFE4B5", tag=oval_tag) 
+        centerX = (x1 + x2) / 2
+        centerY = (y1 + y2) / 2
+        self.c.create_text(centerX, centerY, text=str(oval_tag), font=("Arial", 12), fill="black", tag=oval_tag)
     """Group Connection Plotting"""
     def add_line(self,ped, Peoplelist, line_tag):
         if ped.group_size>1:
