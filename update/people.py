@@ -176,10 +176,18 @@ class PeopleList:
             l_x = (v0_x * delta_time + 0.5 * a_x * delta_time * delta_time)*100 + now.loc[0]  
             l_y = (v0_y * delta_time + 0.5 * a_y * delta_time * delta_time)*100 + now.loc[1]
             
-            # make sure it's not outside of the room
+            # make sure it's not outside of the room(right boader)
+            (left_bottom0, left_bottom1) = barrier_set[0]
             (right_top0, right_top1) = barrier_set[1]
             if l_x>=(right_top0-1)*scale and (l_y<300 or l_y>380):
                 l_x = (right_top0-1-0.05)*scale
+                now.v = (0,0)
+            # make sure it's not outside of the room(top and bottom boader)
+            if l_y>=(right_top1-1)*scale:
+                l_y = (right_top1-1-0.05)*scale
+                now.v = (0,0)
+            elif l_y<=(left_bottom1+1):
+                l_y = (left_bottom1+1+0.05)*scale
                 now.v = (0,0)
             
             # make sure it's not inside the barrier
