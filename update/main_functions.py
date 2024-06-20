@@ -2,6 +2,8 @@
 import numpy as np
 from gui import GUI
 from people import PeopleList, People
+import scipy.stats as stats
+import matplotlib.pyplot as plt
 
 def group_num_calculator(N, r1, r2, r3):
     """Calculation of the number of groups according to the corresponding ratio (pederstains ratio) """
@@ -18,29 +20,6 @@ def group_num_calculator(N, r1, r2, r3):
     
     return num1, num2, num3
 
-    total = group1 + group2 + group3
-    diff = N - total
-
-    while diff != 0:
-        if diff < 0:
-            if group3 > group2 and group3 > group1:
-                group3 -= 3
-            elif group2 > group1:
-                group2 -= 2
-            else:
-                group1 -= 1
-        else:
-            if group1 <= group2 and group1 <= group3:
-                group1 += 1
-            elif group2 <= group3:
-                group2 += 2
-            else:
-                group3 += 3
-        total = group1 + group2 + group3
-        diff = N - total
-    assert group1 + (group2 // 2)*2 + (group3//3)*3 == N, "Total number of people does not match N"
-
-    return group1, group2 // 2, group3 // 3 
 
 def one_simulation(barrier_set, percent_threshold, 
                    r_1, r_2, r_3, A_p, A_o, B, beta1, beta2,
@@ -97,7 +76,8 @@ def one_simulation(barrier_set, percent_threshold,
         moved_out_percentage = ((initial_people_count - remaining_people_count) / initial_people_count) * 100
 
         if not recorded_time and moved_out_percentage >= percent_threshold:
-            print(f"Time when {percent_threshold}% of people moved out: {round(time, 3)} seconds") 
+            time_perct = round(time, 3)
+            # print(f"Time when {percent_threshold}% of people moved out: {round(time, 3)} seconds") 
             recorded_time = True
 
         people_list.move(barrier_set, delta_time=delta_time,  A_p= A_p, A_o= A_o, B=B,
@@ -119,6 +99,38 @@ def one_simulation(barrier_set, percent_threshold,
     if gui_display==True:
         gui.start()
         
-    return time
+    return time, time_perct
+
+
+def plot_with_ci(output_list,param_list, obstacle_type, value_noobs, xlabel='Distance', ylabel='Average Evacuation Time'):
+    mean_values = []
+    conf_intervals = []
+    for outputs in output_list:
+        mean_val = np.mean(outputs)
+        std_dev = np.std(outputs)
+        conf_int = stats.norm.interval(0.95, loc=mean_val, scale=std_dev/np.sqrt(len(output_list)))
+        
+        mean_values.append(mean_val)
+        conf_intervals.append(conf_int)
+    
+    mean_values = np.array(mean_values)
+    conf_lower = mean_values - np.array([ci[0] for ci in conf_intervals])
+    conf_upper = np.array([ci[1] for ci in conf_intervals]) - mean_values
+
+    plt.figure(figsize=(10, 5))
+    plt.errorbar(param_list, mean_values, yerr=[conf_lower, conf_upper], 
+                 fmt='o', color='b', ecolor='lightgray', elinewidth=3, capsize=0,
+                 label = obstacle_type)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(f'Average Evacuation Time ({obstacle_type})')
+    plt.xticks(param_list) 
+    # plt.grid(True)
+    
+    plt.axhline(y=value_noobs, color='r', linestyle='--', label='No Obstacle')
+
+    plt.legend()
+    plt.show()
+    
 
 
