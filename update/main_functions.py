@@ -127,9 +127,11 @@ def plot_with_ci(output_list,param_list, obstacle_type, value_noobs, xlabel='Dis
     plt.xticks(param_list) 
     # plt.grid(True)
     
-    plt.axhline(y=value_noobs, color='r', linestyle='--', label='No Obstacle')
+    if value_noobs:
+        plt.axhline(y=value_noobs, color='r', linestyle='--', label='No Obstacle')
 
     plt.legend()
+    plt.savefig(f"Avg_time_{obstacle_type}")
     plt.show()
     
 

@@ -55,7 +55,7 @@ class AStar:
             for j in range(0, 17):
                 node_matrix[i][j] = Node()
 
-        open_list.append(start_loc)  # add start point to openlist
+        open_list.append(start_loc)  # add start node to openlist
         
         while True:
             now_loc = open_list[0]
