@@ -49,3 +49,16 @@ Execute the simulation script. If GUI is enabled, the simulation will display a 
 
 3. Analyze Results:
 Use the plotting functions to generate visualizations of the evacuation times and analyze the impacts of different configurations.
+
+
+## Example:
+Examples
+To run a simulation with a graphical display:
+```
+aaa
+```
+
+To generate a plot comparing evacuation times with and without obstacles:
+```
+aaa
+```
