@@ -3,7 +3,7 @@
 This repository contains a set of Python scripts designed to simulate the impact of obstacle geometry on escape efficiency, considering both individual and group behaviors. The core function revolves around modeling the movement of agents through environments with various obstacles, calculating evacuation times under different conditions, and analyzing the impact of different group sizes and obstacle configurations.
 
 ## Components
-#### Functions:
+### Functions:
 `astar.py`: Path-finding Algorithm, designed to calculate the most efficient path from a starting point to a predefined goal on a grid:
 - Construct barriers and obstacles on the grid
 - The use of Manhattan distance as a heuristic to estimate the cost from any node on the grid to the goal
@@ -114,5 +114,7 @@ plot_with_two_ci_bar(time_perct_list_g_noobs, time_perct_list_g_obs, x_axis, sce
 The pathfinding component of this code is inspired by the A-star algorithm developed by lc6chang, while the graphical interface is based on the gui code[1]. The simulation of escape panic is modeled after the study "Simulating dynamical features of escape panic" by Helbing et al., published in 2000[2]. For the group escape aspect, the group dynamics draw from the research "The walking behaviour of pedestrian social groups" by Moussaïd et al., published in 2010[3].
 
 [1] https://github.com/lc6chang/Social_Force_Model/tree/master?tab=readme-ov-file
+
 [2] Helbing, D., Farkas, I., & Vicsek, T. (2000). Simulating dynamical features of escape panic. Nature, 407(6803), 487-490.
+
 [3] Moussaïd, M., Perozo, N., Garnier, S., Helbing, D., & Theraulaz, G. (2010). The walking behaviour of pedestrian social groups and its impact on crowd dynamics. PloS one, 5(4), e10047.
